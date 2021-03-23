@@ -8,6 +8,7 @@ use App\Controllers\Controller;
 use App\Controllers\Redis\MonitorController;
 use App\Controllers\Redis\PubsubController;
 use App\Controllers\CliController as Cli;
+use Exception;
 
 class InitController extends Controller
 {
@@ -43,24 +44,31 @@ class InitController extends Controller
      */
     public function run ()
     {
-        $this->setHeader();
+        try{
+            $this->setHeader();
 
-        switch($this->mode){
-            case 'pubsub':
-                $redis = new PubsubController;
-                $redis->main();
-                break;
+            switch($this->mode){
+                case 'pubsub':
+                    $redis = new PubsubController;
+                    $redis->main();
+                    break;
 
-            case 'monitor':
-                $redis = new MonitorController;
-                $redis->main();
-                break;
+                case 'monitor':
+                    $redis = new MonitorController;
+                    $redis->main();
+                    break;
 
-            default:
-                $redis = new PubsubController;
-                $redis->main();
-                break;
+                default:
+                    $redis = new PubsubController;
+                    $redis->main();
+                    break;
+            }
+        }catch (Exception $e){
+            echo $e->getMessage();
         }
+        
+
+        
     }
 
 

@@ -48,6 +48,8 @@ class MonitorController extends Controller
 
         $this->client = new Client($this->server);
 
+        if ( empty($this->client) ) throw new Exception('[ERROR] (MonitorController::__construct()): The client was not created.');
+
         $this->setQueue( Config::env('REDIS_QUEUE', 'queue') );
     }
 
@@ -63,6 +65,8 @@ class MonitorController extends Controller
     public function main ()
     {
         $monitor = $this->client->monitor();
+
+        if ( empty($monitor) ) throw new Exception('[ERROR] (MonitorController::main()): The monitor was not created.');
 
         foreach ( $monitor as $event) {
 
@@ -107,7 +111,7 @@ class MonitorController extends Controller
             Cli::info('New on queue (' . $this->getQueue() . '): ' . json_encode($publication), true);
 
             // Queue the message the user published
-            $queuePush = $this->client->rpush($this->getQueue(), json_encode($publication));
+            $this->client->rpush($this->getQueue(), json_encode($publication));
         }
     }
 

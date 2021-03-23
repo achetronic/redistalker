@@ -7,7 +7,7 @@ namespace App\Controllers\Redis;
 use App\Controllers\Controller;
 use App\Controllers\CliController as Cli;
 use App\Helpers\ConfigHelper as Config;
-
+use Exception;
 use Predis\Client;
 use Predis\Commands\Rpush;
 use Predis\Commands\Psubscribe;
@@ -46,8 +46,12 @@ class PubsubController extends Controller
         // The socket for pubsub (unidirectional)
         $this->client = new Client($this->server);
 
+        if ( empty($this->client) ) throw new Exception('[ERROR] (PubsubController::__construct()): The client was not created.');
+
         // We need a second socket (bidirectional) to queue messages
         $this->railway = new Client($this->server);
+
+        if ( empty($this->railway) ) throw new Exception('[ERROR] (PubsubController::__construct()): The railway was not created.');
 
         $this->setQueue( Config::env('REDIS_QUEUE', 'queue') );
     }
@@ -65,6 +69,8 @@ class PubsubController extends Controller
     {
         // Initialize a new pubsub consumer.
         $pubsub = $this->client->pubSubLoop();
+
+        if ( empty($pubsub) ) throw new Exception('[ERROR] (PubsubController::main()): The pubsub was not created.');
 
         // Subscribe to your channels
         $pubsub->psubscribe('*');
