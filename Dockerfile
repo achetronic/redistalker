@@ -51,6 +51,9 @@ RUN mkdir -p /tmp/app
 # Download the entire project
 COPY . /tmp/app/
 
+# Create needed folders for composer autoloader optimization
+RUN mkdir -p /app
+
 # Defining which packages Composer will install
 RUN cp /tmp/app/composer.lock /app/composer.lock
 RUN cp /tmp/app/composer.json /app/composer.json
