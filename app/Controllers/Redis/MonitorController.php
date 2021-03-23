@@ -2,7 +2,7 @@
 
 declare( strict_types = 1 );
 
-namespace App\Controllers;
+namespace App\Controllers\Redis;
 
 use App\Controllers\Controller;
 use Predis\Client;
@@ -10,7 +10,7 @@ use Predis\Commands\Rpush;
 use DateTime;
 use App\Controllers\CliController as Cli;
 
-class RedisController extends Controller
+class MonitorController extends Controller
 {
     protected $client;
 
