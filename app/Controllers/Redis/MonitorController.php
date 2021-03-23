@@ -47,8 +47,11 @@ class MonitorController extends Controller
 
 
     /**
+     * Init the monitor loop, stalk all publish commands.
+     * Store the messages into the queue.
      * 
-     * 
+     * Emergency button to break the loop
+     * "PUBLISH snsorial.control stop_redistalker"
      */
     public function main ()
     {
@@ -78,18 +81,16 @@ class MonitorController extends Controller
                 Cli::info('Arguments: '.$event->arguments, true);
             }
 
-            // If we notice a ECHO command with the message QUIT_MONITOR, we stop the
-            // monitor consumer and then break the loop.
-            if ($this->command === 'ECHO' && $this->arguments[0] === 'snsorial-under-attack') {
+            //
+            if($this->command !== 'PUBLISH'){
+                continue;
+            }
+
+            if ($this->arguments[0] === 'snsorial.control' && $this->arguments[1] === 'stop_redistalker') {
                 Cli::error("Emergency button pushed", true);
                 Cli::info('Exiting the monitor loop...', true);
                 $monitor->stop();
                 break;
-            }
-
-            //
-            if($this->command !== 'PUBLISH'){
-                continue;
             }
 
             // Craft the final message Redis will store
@@ -103,8 +104,6 @@ class MonitorController extends Controller
 
             // Queue the message the user published
             $queuePush = $this->client->rpush($this->getQueue(), json_encode($publication));
-
-            // var_dump($queuePush);
         }
     }
 
