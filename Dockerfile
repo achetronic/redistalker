@@ -89,11 +89,7 @@ RUN find /app -type d -exec chmod 755 {} \;
 # Crafting the entrypoint script
 RUN rm -rf /entrypoint.sh && touch /entrypoint.sh
 RUN echo "#!/bin/bash" >> /entrypoint.sh
-# RUN echo "service cron start" >> /entrypoint.sh
 RUN echo "shopt -s dotglob" >> /entrypoint.sh
-# RUN echo "(crontab -l; echo '* * * * * cd /var/www && php artisan schedule:run >> /dev/null 2>&1';) | crontab -" >> /entrypoint.sh
-# RUN echo "touch /etc/crontab /etc/cron.*/*" >> /entrypoint.sh
-# RUN echo 'exec "$@"' >> /entrypoint.sh
 # RUN echo "php -f /app/redistalker.php" >> /entrypoint.sh
 RUN echo "/bin/bash" >> /entrypoint.sh
 
@@ -108,5 +104,9 @@ RUN chmod +x /entrypoint.sh
 # Gaining a bit of comfort
 WORKDIR "/app"
 
+# El ENTRYPOINT especifica el ejecutable que usará el contenedor,
+# El CMD se corresponde con los parámetros a usar con dicho ejecutable.
+
 # Executing the scripts
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash"]
+CMD ["/entrypoint.sh"]
