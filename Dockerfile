@@ -94,7 +94,7 @@ RUN echo "shopt -s dotglob" >> /entrypoint.sh
 # RUN echo "(crontab -l; echo '* * * * * cd /var/www && php artisan schedule:run >> /dev/null 2>&1';) | crontab -" >> /entrypoint.sh
 # RUN echo "touch /etc/crontab /etc/cron.*/*" >> /entrypoint.sh
 # RUN echo 'exec "$@"' >> /entrypoint.sh
-RUN echo "php -f /app/redistalker.php" >> /entrypoint.sh
+# RUN echo "php -f /app/redistalker.php" >> /entrypoint.sh
 RUN echo "/bin/bash" >> /entrypoint.sh
 
 # Giving permissions to the entrypoint script
