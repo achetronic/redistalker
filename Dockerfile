@@ -88,7 +88,7 @@ RUN find /app -type d -exec chmod 755 {} \;
 # Crafting the entrypoint script
 RUN rm -rf /entrypoint.sh && touch /entrypoint.sh
 RUN echo "#!/bin/bash" >> /entrypoint.sh
-RUN echo "service atd start" >> /entrypoint.sh
+#RUN echo "service atd start" >> /entrypoint.sh
 #RUN echo "sh /app/runtime/takeover.sh" >> /entrypoint.sh
 #RUN echo "php -f /app/redistalker.php" >> /entrypoint.sh
 RUN echo "/bin/bash" >> /entrypoint.sh
@@ -98,8 +98,8 @@ RUN chown root:root /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Giving permissions to the takeover script
-RUN chown root:root /app/runtime/takeover.sh
-RUN chmod +x /app/runtime/takeover.sh
+#RUN chown root:root /app/runtime/takeover.sh
+#RUN chmod +x /app/runtime/takeover.sh
 
 # Gaining a bit of comfort
 WORKDIR "/app"
