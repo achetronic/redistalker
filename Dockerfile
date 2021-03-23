@@ -9,9 +9,9 @@ ARG php_version=8.0
 RUN apt-get update
 
 RUN apt-get install -y -qq --force-yes \
+    at \
     lsb-base \
     procps \
-    cron \
         --no-install-recommends > /dev/null
 
 #### PHP OPERATIONS
@@ -32,7 +32,6 @@ RUN apt-get update
 RUN apt-get install -y -qq --force-yes \
     php${php_version}-cli \
     php-redis \
-#	php-curl \
 	--no-install-recommends > /dev/null
 
 #### APP OPERATIONS
@@ -89,8 +88,8 @@ RUN find /app -type d -exec chmod 755 {} \;
 # Crafting the entrypoint script
 RUN rm -rf /entrypoint.sh && touch /entrypoint.sh
 RUN echo "#!/bin/bash" >> /entrypoint.sh
-RUN echo "shopt -s dotglob" >> /entrypoint.sh
-RUN echo 'exec "$@"' >> /entrypoint.sh
+RUN echo "service atd start" >> /entrypoint.sh
+RUN echo "sh /app/runtime/takeover.sh" >> /entrypoint.sh
 RUN echo "php -f /app/redistalker.php" >> /entrypoint.sh
 RUN echo "/bin/bash" >> /entrypoint.sh
 
@@ -98,9 +97,9 @@ RUN echo "/bin/bash" >> /entrypoint.sh
 RUN chown root:root /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Giving permissions to the livenessprobe script
-# RUN chown root:root /app/runtime/livenessprobe.sh
-# RUN chmod +x /app/runtime/livenessprobe.sh
+# Giving permissions to the takeover script
+RUN chown root:root /app/runtime/takeover.sh
+RUN chmod +x /app/runtime/takeover.sh
 
 # Gaining a bit of comfort
 WORKDIR "/app"
@@ -109,5 +108,5 @@ WORKDIR "/app"
 # El CMD se corresponde con los parámetros a usar con dicho ejecutable.
 
 # Executing the scripts
-ENTRYPOINT ["/bin/bash"]
+ENTRYPOINT ["/entrypoint.sh"]
 #CMD ["/entrypoint.sh"]
