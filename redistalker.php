@@ -3,8 +3,8 @@
 // Import all classes from Composer packages
 require_once __DIR__ . '/kernel.php';
 
-use App\Controllers\RedisController;
+use App\Controllers\Redis\MonitorController;
 
 // Execute the main flow of the project
-$redis = new RedisController;
+$redis = new MonitorController;
 $redis->main();
