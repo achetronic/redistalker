@@ -7,6 +7,7 @@ namespace App\Controllers\Redis;
 use App\Controllers\Controller;
 use App\Controllers\Redis\MonitorController;
 use App\Controllers\Redis\PubsubController;
+use App\Controllers\CliController as Cli;
 
 class InitController extends Controller
 {
@@ -25,10 +26,25 @@ class InitController extends Controller
 
 
     /**
+     * 
+     * 
+     */
+    protected function setHeader() 
+    {
+        Cli::title("REDISTALKER: the ultimate Redis stalker");
+        Cli::warning("Consumer will run in {$this->mode} mode");
+        Cli::info(PHP_EOL);
+    }
+
+
+
+    /**
      * Start the loop in the defined way
      */
     public function run ()
     {
+        $this->setHeader();
+
         switch($this->mode){
             case 'pubsub':
                 $redis = new PubsubController;
