@@ -6,6 +6,7 @@ namespace App\Controllers;
 
 use App\Controllers\Controller;
 use Codedungeon\PHPCliColors\Color;
+use DateTime;
 
 class CliController extends Controller
 {
@@ -13,11 +14,10 @@ class CliController extends Controller
      * 
      * 
      */
-    public static function error ( string $msg ) : string
+    public static function getTimestamp () : string
     {
-        $msg = Color::BG_RED . Color::BOLD . $msg . Color::RESET .PHP_EOL;
-        echo $msg;
-        return $msg;
+        $now = new DateTime();
+        return Color::BOLD . '[' .$now->format(DateTime::W3C) . '] ' . Color::RESET;
     }
 
 
@@ -26,11 +26,14 @@ class CliController extends Controller
      * 
      * 
      */
-    public static function warning ( string $msg ) : string
+    public static function error ( string $msg = '', bool $timestamp = false)
     {
-        $msg = Color::BG_BLACK . Color::YELLOW . Color::BOLD . $msg . Color::RESET .PHP_EOL;
-        echo $msg;
-        return $msg;
+        $response = '';
+        if ($timestamp){
+            $response = self::getTimestamp();
+        }
+        $response .= Color::BG_RED . Color::BOLD . $msg . Color::RESET .PHP_EOL;
+        echo $response;
     }
 
 
@@ -39,11 +42,14 @@ class CliController extends Controller
      * 
      * 
      */
-    public static function success ( string $msg ) : string
+    public static function warning ( string $msg = '', bool $timestamp = false)
     {
-        $msg = Color::BG_BLACK . Color::GREEN . $msg . Color::RESET .PHP_EOL;
-        echo $msg;
-        return $msg;
+        $response = '';
+        if ($timestamp){
+            $response = self::getTimestamp();
+        }
+        $response .= Color::BG_BLACK . Color::YELLOW . Color::BOLD . $msg . Color::RESET .PHP_EOL;
+        echo $response;
     }
 
 
@@ -52,11 +58,30 @@ class CliController extends Controller
      * 
      * 
      */
-    public static function info ( string $msg ) : string
+    public static function success ( string $msg = '', bool $timestamp = false)
     {
-        $msg = Color::BG_BLACK . Color::WHITE . $msg . Color::RESET .PHP_EOL;
-        echo $msg;
-        return $msg;
+        $response = '';
+        if ($timestamp){
+            $response = self::getTimestamp();
+        }
+        $response .= Color::BG_BLACK . Color::GREEN . $msg . Color::RESET .PHP_EOL;
+        echo $response;
+    }
+
+
+
+    /**
+     * 
+     * 
+     */
+    public static function info ( string $msg = '', bool $timestamp = false)
+    {
+        $response = '';
+        if ($timestamp){
+            $response = self::getTimestamp();
+        }
+        $response .= Color::BG_BLACK . Color::WHITE . $msg . Color::RESET .PHP_EOL;
+        echo $response;
     }
 
     

@@ -14,7 +14,7 @@ class RedisController extends Controller
 {
     protected $client;
 
-    protected $timestamp;
+    protected DateTime $timestamp;
 
     protected $database;
 
@@ -57,6 +57,7 @@ class RedisController extends Controller
         foreach ( $monitor as $event) {
 
             $this->timestamp->setTimestamp((int) $event->timestamp);
+            // $this->timestamp = (string) $this->timestampObj->format(DateTime::W3C);
 
             $this->database  = $this->getDatabase ( $event );
             $this->command   = $this->getCommand ( $event );
@@ -71,17 +72,17 @@ class RedisController extends Controller
                 continue;
             }
 
-            Cli::warning("Received {$this->command} on DB {$this->database} at {$this->timestamp->format(DateTime::W3C)}");
+            Cli::warning("Received {$this->command} on DB {$this->database}", true);
 
             if (isset($event->arguments)) {
-                Cli::info('Arguments: '.$event->arguments);
+                Cli::info('Arguments: '.$event->arguments, true);
             }
 
             // If we notice a ECHO command with the message QUIT_MONITOR, we stop the
             // monitor consumer and then break the loop.
             if ($this->command === 'ECHO' && $this->arguments[0] === 'snsorial-under-attack') {
-                Cli::error('['. $this->timestamp->format(DateTime::W3C) . '] Emergency button pushed');
-                Cli::info('Exiting the monitor loop...');
+                Cli::error("Emergency button pushed", true);
+                Cli::info('Exiting the monitor loop...', true);
                 $monitor->stop();
                 break;
             }
@@ -98,10 +99,12 @@ class RedisController extends Controller
             ];
 
             // Inform the action on the console
-            Cli::info('New on queue (' . $this->getQueue() . '): ' . json_encode($publication));
+            Cli::info('New on queue (' . $this->getQueue() . '): ' . json_encode($publication), true);
 
             // Queue the message the user published
-            $this->client->rpush($this->getQueue(), json_encode($publication));
+            $queuePush = $this->client->rpush($this->getQueue(), json_encode($publication));
+
+            // var_dump($queuePush);
         }
     }
 
