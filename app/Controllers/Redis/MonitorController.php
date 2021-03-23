@@ -14,7 +14,7 @@ use Predis\Commands\Rpush;
 class MonitorController extends Controller
 {
     protected $server = [
-        'scheme'   => 'tcp',
+        'scheme'   => null,
         'host'     => null,
         'port'     => null,
         'username' => null,
@@ -40,6 +40,7 @@ class MonitorController extends Controller
      */
     public function __construct() 
     {
+        $this->server['scheme']   = Config::env('REDIS_SCHEME', 'tcp');
         $this->server['host']     = Config::env('REDIS_HOST', '127.0.0.1');
         $this->server['port']     = Config::env('REDIS_PORT', 6370);;
         $this->server['username'] = Config::env('REDIS_USERNAME', null);

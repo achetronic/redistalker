@@ -9,23 +9,14 @@ class ConfigHelper
     /**
      * Get a value fron ENV vars or return a default value
      * 
+     * @param string $var 
+     * @param $default
      */
     public static function env ( $var, $default )
     {
-        if( empty($_ENV[$var]) || $_ENV[$var] == 'null' )
+        if( empty($_SERVER[$var]) || $_SERVER[$var] == 'null' )
             return $default;
 
-        return $_ENV[$var];
-    }
-
-
-
-    /**
-     * 
-     * 
-     */
-    public static function config ($file)
-    {
-
+        return $_SERVER[$var];
     }
 }
