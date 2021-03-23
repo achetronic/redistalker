@@ -8,7 +8,7 @@ use App\Controllers\Controller;
 use Predis\Client;
 use Predis\Commands\Rpush;
 use DateTime;
-use Codedungeon\PHPCliColors\Color;
+use App\Controllers\CliController as Cli;
 
 class RedisController extends Controller
 {
@@ -71,16 +71,17 @@ class RedisController extends Controller
                 continue;
             }
 
-            echo "* Received {$this->command} on DB {$this->database} at {$this->timestamp->format(DateTime::W3C)}", PHP_EOL;
+            Cli::warning("Received {$this->command} on DB {$this->database} at {$this->timestamp->format(DateTime::W3C)}");
+
             if (isset($event->arguments)) {
-                echo "    Arguments: {$event->arguments}", PHP_EOL;
+                Cli::info('Arguments: '.$event->arguments);
             }
 
             // If we notice a ECHO command with the message QUIT_MONITOR, we stop the
             // monitor consumer and then break the loop.
             if ($this->command === 'ECHO' && $this->arguments[0] === 'snsorial-under-attack') {
-                echo 'Exiting the monitor loop...', PHP_EOL;
-                echo Color::bold(), 'Hello', Color::RESET, PHP_EOL;
+                Cli::error('['. $this->timestamp->format(DateTime::W3C) . '] Emergency button pushed');
+                Cli::info('Exiting the monitor loop...');
                 $monitor->stop();
                 break;
             }
@@ -97,7 +98,7 @@ class RedisController extends Controller
             ];
 
             // Inform the action on the console
-            echo "    Want to publish: " . json_encode($publication) . PHP_EOL;
+            Cli::info('New on queue (' . $this->getQueue() . '): ' . json_encode($publication));
 
             // Queue the message the user published
             $this->client->rpush($this->getQueue(), json_encode($publication));
@@ -107,8 +108,12 @@ class RedisController extends Controller
 
 
     /**
+     * Get the arguments given to the Redis server
+     * parsed as an array
      * 
+     * @param $event 
      * 
+     * @return array|null
      */
     protected function getArguments ( $event ) 
     {
@@ -126,8 +131,11 @@ class RedisController extends Controller
 
 
     /**
+     * Get the command given to the Redis server
      * 
+     * @param $event 
      * 
+     * @return string|null
      */
     protected function getCommand ( $event ) 
     {
@@ -142,8 +150,11 @@ class RedisController extends Controller
 
 
     /**
+     * Get the database given to the Redis server
      * 
+     * @param $event 
      * 
+     * @return string|null
      */
     protected function getDatabase ( $event ) 
     {
@@ -158,9 +169,11 @@ class RedisController extends Controller
 
 
     /**
+     * Set the queue name to queue the messages
      * 
+     * @param string $name The name of the queue
      * 
-     * 
+     * @return void
      */
     protected function setQueue ( string $name ) 
     {
@@ -170,9 +183,9 @@ class RedisController extends Controller
 
 
     /**
+     * Get the queue name of the messages queue
      * 
-     * 
-     * 
+     * @return void
      */
     protected function getQueue ( ) 
     {
