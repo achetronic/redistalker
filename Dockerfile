@@ -90,7 +90,8 @@ RUN find /app -type d -exec chmod 755 {} \;
 RUN rm -rf /entrypoint.sh && touch /entrypoint.sh
 RUN echo "#!/bin/bash" >> /entrypoint.sh
 RUN echo "shopt -s dotglob" >> /entrypoint.sh
-# RUN echo "php -f /app/redistalker.php" >> /entrypoint.sh
+RUN echo 'exec "$@"' >> /entrypoint.sh
+RUN echo "php -f /app/redistalker.php" >> /entrypoint.sh
 RUN echo "/bin/bash" >> /entrypoint.sh
 
 # Giving permissions to the entrypoint script
