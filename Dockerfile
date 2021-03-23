@@ -109,4 +109,4 @@ WORKDIR "/app"
 
 # Executing the scripts
 ENTRYPOINT ["/bin/bash"]
-CMD ["/entrypoint.sh"]
+#CMD ["/entrypoint.sh"]
