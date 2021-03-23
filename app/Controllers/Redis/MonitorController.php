@@ -5,16 +5,24 @@ declare( strict_types = 1 );
 namespace App\Controllers\Redis;
 
 use App\Controllers\Controller;
+use App\Controllers\CliController as Cli;
+use App\Helpers\ConfigHelper as Config;
+
 use Predis\Client;
 use Predis\Commands\Rpush;
-use DateTime;
-use App\Controllers\CliController as Cli;
 
 class MonitorController extends Controller
 {
-    protected $client;
+    protected $server = [
+        'scheme'   => 'tcp',
+        'host'     => null,
+        'port'     => null,
+        'username' => null,
+        'password' => null,
+        'read_write_timeout' => 0,
+    ];
 
-    protected DateTime $timestamp;
+    protected $client;
 
     protected $database;
 
@@ -32,16 +40,14 @@ class MonitorController extends Controller
      */
     public function __construct() 
     {
-        $this->client = new Client([
-            'scheme' => 'tcp',
-            'host'   => '127.0.0.1',
-            'port'   => 6379,
-        ] + array('read_write_timeout' => 0));
+        $this->server['host']     = Config::env('REDIS_HOST', '127.0.0.1');
+        $this->server['port']     = Config::env('REDIS_PORT', 6370);;
+        $this->server['username'] = Config::env('REDIS_USERNAME', null);
+        $this->server['password'] = Config::env('REDIS_PASSWORD', null);
 
-        // Use only one instance of DateTime, we will update the timestamp later.
-        $this->timestamp = new DateTime();
+        $this->client = new Client($this->server);
 
-        $this->setQueue('cola');
+        $this->setQueue( Config::env('REDIS_QUEUE', 'queue') );
     }
 
 
@@ -58,9 +64,6 @@ class MonitorController extends Controller
         $monitor = $this->client->monitor();
 
         foreach ( $monitor as $event) {
-
-            $this->timestamp->setTimestamp((int) $event->timestamp);
-            // $this->timestamp = (string) $this->timestampObj->format(DateTime::W3C);
 
             $this->database  = $this->getDatabase ( $event );
             $this->command   = $this->getCommand ( $event );

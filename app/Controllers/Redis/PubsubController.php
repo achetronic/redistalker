@@ -6,6 +6,7 @@ namespace App\Controllers\Redis;
 
 use App\Controllers\Controller;
 use App\Controllers\CliController as Cli;
+use App\Helpers\ConfigHelper as Config;
 
 use Predis\Client;
 use Predis\Commands\Rpush;
@@ -14,10 +15,12 @@ use Predis\Commands\Psubscribe;
 class PubsubController extends Controller
 {
     protected $server = [
-        'scheme' => 'tcp',
-        'host'   => '127.0.0.1',
-        'port'   => 6379,
-        'read_write_timeout' => 0
+        'scheme'   => 'tcp',
+        'host'     => null,
+        'port'     => null,
+        'username' => null,
+        'password' => null,
+        'read_write_timeout' => 0,
     ];
 
     protected $client;
@@ -34,13 +37,18 @@ class PubsubController extends Controller
      */
     public function __construct() 
     {
+        $this->server['host']     = Config::env('REDIS_HOST', '127.0.0.1');
+        $this->server['port']     = Config::env('REDIS_PORT', 6370);;
+        $this->server['username'] = Config::env('REDIS_USERNAME', null);
+        $this->server['password'] = Config::env('REDIS_PASSWORD', null);
+
         // The socket for pubsub (unidirectional)
         $this->client = new Client($this->server);
 
         // We need a second socket (bidirectional) to queue messages
         $this->railway = new Client($this->server);
 
-        $this->setQueue('cola');
+        $this->setQueue( Config::env('REDIS_QUEUE', 'queue') );
     }
 
 

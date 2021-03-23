@@ -84,5 +84,21 @@ class CliController extends Controller
         echo $response;
     }
 
+
+
+    /**
+     * 
+     * 
+     */
+    public static function title ( string $msg = '', bool $timestamp = false)
+    {
+        $response = '';
+        if ($timestamp){
+            $response = self::getTimestamp();
+        }
+        $response .= Color::BG_DARK_GRAY . Color::BOLD . $msg . Color::RESET .PHP_EOL;
+        echo $response;
+    }
+
     
 }
