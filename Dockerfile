@@ -87,8 +87,8 @@ RUN find /app -type d -exec chmod 755 {} \;
 # Crafting the entrypoint script
 RUN rm -rf /entrypoint.sh && touch /entrypoint.sh
 RUN echo "#!/bin/bash" >> /entrypoint.sh
-#RUN echo "php -f /app/redistalker.php" >> /entrypoint.sh
-RUN echo "/bin/bash" >> /entrypoint.sh
+RUN echo "php -f /app/redistalker.php" >> /entrypoint.sh
+# RUN echo "/bin/bash" >> /entrypoint.sh
 
 # Giving permissions to the entrypoint script
 RUN chown root:root /entrypoint.sh
