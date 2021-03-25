@@ -13,23 +13,25 @@ $dotenv->loadEnv(__DIR__.'/.env');
 $metrics = (new MetricsController)->getMetricsArray();
 var_export($metrics);
 
-// $loop = React\EventLoop\Factory::create();
+$loop = React\EventLoop\Factory::create();
 
-// echo "hola";
+$server = new React\Http\Server($loop, function (Psr\Http\Message\ServerRequestInterface $request) {
 
-// $server = new React\Http\Server($loop, function (Psr\Http\Message\ServerRequestInterface $request) {
-//     return new React\Http\Message\Response(
-//         200,
-//         array(
-//             'Content-Type' => 'text/plain'
-//         ),
-//         "Hello World!\n"
-//     );
-// });
+    $path = $request->getUri()->getPath();
+    $method = $request->getMethod();
 
-// $socket = new React\Socket\Server(8080, $loop);
-// $server->listen($socket);
+    if ($path === '/metrics') {
+        if ($method === 'GET') {
+            return new React\Http\Message\Response(200, ['Content-Type' => 'text/plain'],  'jelow metrics');
+        }
+    }
 
-// echo "Server running at http://127.0.0.1:8080\n";
+    return new React\Http\Message\Response(404, ['Content-Type' => 'text/plain'],  'Not found');
+});
 
-// $loop->run();
+$socket = new React\Socket\Server(8080, $loop);
+$server->listen($socket);
+
+echo "Server running at http://127.0.0.1:8080\n";
+
+$loop->run();
