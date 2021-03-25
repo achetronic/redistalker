@@ -87,8 +87,8 @@ RUN find /app -type d -exec chmod 755 {} \;
 # Crafting the entrypoint script
 RUN rm -rf /entrypoint.sh && touch /entrypoint.sh
 RUN echo "#!/bin/bash" >> /entrypoint.sh
-#RUN echo "php -f /app/consume.php" >> /entrypoint.sh
-RUN echo "nohup php -f /app/consume.php &>/dev/null &" >> /entrypoint.sh
+RUN echo "php -f /app/consume.php" >> /entrypoint.sh
+#RUN echo "nohup php -f /app/consume.php &>/dev/null &" >> /entrypoint.sh
 RUN echo "nohup php -f /app/expose.php &>/dev/null &" >> /entrypoint.sh
 # RUN echo "/bin/bash" >> /entrypoint.sh
 
