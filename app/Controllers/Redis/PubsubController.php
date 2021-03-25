@@ -8,21 +8,13 @@ use App\Controllers\Controller;
 use App\Controllers\CliController as Cli;
 use App\Helpers\ConfigHelper as Config;
 use Exception;
+use App\Models\Redis;
 use Predis\Client;
 use Predis\Commands\Rpush;
 use Predis\Commands\Psubscribe;
 
 class PubsubController extends Controller
 {
-    protected $server = [
-        'scheme'   => null,
-        'host'     => null,
-        'port'     => null,
-        'username' => null,
-        'password' => null,
-        'read_write_timeout' => 0,
-    ];
-
     protected $client;
 
     protected $railway;
@@ -37,19 +29,13 @@ class PubsubController extends Controller
      */
     public function __construct() 
     {
-        $this->server['scheme']   = Config::env('REDIS_SCHEME', 'tcp');
-        $this->server['host']     = Config::env('REDIS_HOST', '127.0.0.1');
-        $this->server['port']     = Config::env('REDIS_PORT', 6370);;
-        $this->server['username'] = Config::env('REDIS_USERNAME', null);
-        $this->server['password'] = Config::env('REDIS_PASSWORD', null);
-
         // The socket for pubsub (unidirectional)
-        $this->client = new Client($this->server);
+        $this->client = (new Redis())->getClient();
 
         if ( empty($this->client) ) throw new Exception('[ERROR] (PubsubController::__construct()): The client was not created.');
 
         // We need a second socket (bidirectional) to queue messages
-        $this->railway = new Client($this->server);
+        $this->railway = (new Redis())->getClient();
 
         if ( empty($this->railway) ) throw new Exception('[ERROR] (PubsubController::__construct()): The railway was not created.');
 
