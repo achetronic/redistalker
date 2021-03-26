@@ -82,7 +82,7 @@ class PubsubController extends Controller
 
                         $publication = [
                             'channel' => $message->channel,
-                            'message' => $message->payload
+                            'payload' => $message->payload
                         ];
             
                         // Inform the action on the console
