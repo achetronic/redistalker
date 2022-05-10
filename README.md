@@ -1,9 +1,6 @@
 Redistalker
 ======
 
-<img src="https://gitlab.com/achetronic/redistalker/-/wikis/uploads/1148f2df4198939e37cc3f36bce446bd/382763_johnyky_perv.png" width="150" height="150" />
-<div style="height:2rem;"></div>
-
 #### About the project
 We like calling this project "the ultimate Redis stalker". 
 It can monitor all PubSub channels of a Redis server and throw each message into a Redis queue. 
