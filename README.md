@@ -17,10 +17,10 @@ For that, visit our wiki clicking on the link
 This little wonder is maintained by two people:
 
 Alby Hernández (@achetronic)
-[Website](https://achetronic.com) | [Youtube](https://youtube.com/achetronic) | [Gitlab](https://gitlab.com/achetronic)
+[Website](https://achetronic.com) | [Youtube](https://youtube.com/achetronic) | [Github](https://github.com/achetronic)
 
-Sebastián Vargas (@develolux)
-[Website](#) | [Youtube](#) | [Gitlab](https://gitlab.com/develolux)
+Sebastián Vargas (@sebastocorp)
+[Website](#) | [Youtube](#) | [Github](https://github.com/sebastocorp)
 
 #### License
 This project is licensed under the GNU GPLv3 (GPL-3.0-only) License 
